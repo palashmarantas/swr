@@ -195,10 +195,7 @@ describe('useSWR - focus', () => {
     await focusWindow()
     // wait for throttle intervals
     await act(() => sleep(150))
-    // trigger revalidation
-    await focusWindow()
-    await waitForNextTick()
-    await screen.findByText('data: 5')
+    await screen.findByText('data: 4')
   })
 
   it('should revalidate on focus even with custom cache', async () => {
@@ -219,5 +216,30 @@ describe('useSWR - focus', () => {
     await waitForNextTick()
     await focusWindow()
     await screen.findByText('data: 1')
+  })
+
+  it('should not revalidate on focus when key changes in the same tick', async () => {
+    const fetchLogs = []
+
+    function Page() {
+      const [key, setKey] = useState(() => createKey())
+      useSWR(key, k => fetchLogs.push(k), {
+        revalidateOnFocus: true,
+        dedupingInterval: 0
+      })
+      return <div onClick={() => setKey(createKey())}>change key</div>
+    }
+
+    renderWithConfig(<Page />)
+    await waitForNextTick()
+
+    fireEvent.focus(window)
+    fireEvent.click(screen.getByText('change key'))
+
+    await waitForNextTick()
+
+    // Only fetched twice with the initial and the new keys.
+    expect(fetchLogs.length).toBe(2)
+    expect(fetchLogs[0]).not.toEqual(fetchLogs[1])
   })
 })

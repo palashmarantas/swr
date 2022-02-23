@@ -1,11 +1,13 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
 const projects = [
   'facebook/flipper',
   'vuejs/vuepress',
   'rust-lang/rust',
-  'zeit/next.js'
+  'vercel/next.js'
 ]
 
-export default function api(req, res) {
+export default function api(req: NextApiRequest, res: NextApiResponse) {
   if (req.query.id) {
     // a slow endpoint for getting repo data
     fetch(`https://api.github.com/repos/${req.query.id}`)
