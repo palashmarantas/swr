@@ -1,25 +1,17 @@
 ---
 framework: jest
-licenseTier: xsmall
-postMerge: 
-  pattern: 
-    - "./test/unit/*.test.tsx"
-    - "./test/unit/*.test.ts"
-    - "./test/*.test.tsx"
-  strategy: 
-    threshold: <5|100s|30m|6h>
-    type: <commit|time>
-preMerge:
-  pattern:
-    - "./test/unit/*.test.tsx"
-    - "./test/unit/*.test.ts"
-    - "./test/*.test.tsx"
 preRun:
      command:
         - yarn install
         - yarn run clean
         - yarn run build
+preMerge:
+  pattern:
+    - "./test/**/*.test.{tsx,ts}"
+postMerge: 
+  pattern: 
+    - "./test/**/*.test.{tsx,ts}"
 postRun:
      command:
         - yarn --version
-version: 2.0
+version: 1.0
