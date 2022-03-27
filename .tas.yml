@@ -1,5 +1,7 @@
 ---
 framework: jest
+blocklist:
+  - "test/use-swr-suspense.test.tsx"
 preRun:
      command:
         - yarn install
